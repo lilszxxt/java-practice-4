@@ -7,14 +7,11 @@ import java.util.Scanner;
  */
 public class MainClass {
 
-    /**
-     * Program entry point.
-     *
-     * @param args command line arguments
-     */
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         ArrayList<Employee> employees = new ArrayList<Employee>();
+
+        printHeader();
 
         boolean running = true;
 
@@ -31,6 +28,13 @@ public class MainClass {
                     printEmployees(employees);
                     break;
                 case 3:
+                    copyLastEmployee(employees);
+                    break;
+                case 4:
+                    System.out.println("Кількість створених працівників: "
+                            + Employee.getEmployeeCount());
+                    break;
+                case 5:
                     running = false;
                     System.out.println("Роботу завершено.");
                     break;
@@ -43,20 +47,30 @@ public class MainClass {
     }
 
     /**
-     * Prints console menu.
+     * Prints information header.
+     */
+    public static void printHeader() {
+        System.out.println("Практична робота №6");
+        System.out.println("Класи, статичні члени, агрегація, enum");
+    }
+
+    /**
+     * Prints menu.
      */
     public static void printMenu() {
         System.out.println();
         System.out.println("1. Створити новий об'єкт");
         System.out.println("2. Вивести інформацію про всі об'єкти");
-        System.out.println("3. Завершити роботу");
+        System.out.println("3. Скопіювати останній об'єкт");
+        System.out.println("4. Показати кількість створених об'єктів");
+        System.out.println("5. Завершити роботу");
     }
 
     /**
-     * Creates employee and adds it to list.
+     * Creates employee.
      *
      * @param scanner scanner object
-     * @param employees list of employees
+     * @param employees employee list
      */
     public static void createEmployee(Scanner scanner, ArrayList<Employee> employees) {
         try {
@@ -64,9 +78,13 @@ public class MainClass {
             String position = readString(scanner, "Посада: ");
             int age = readInt(scanner, "Вік: ");
             double salary = readDouble(scanner, "Зарплата: ");
-            String department = readString(scanner, "Відділ: ");
+            Department department = readDepartment(scanner);
+            String city = readString(scanner, "Місто: ");
+            String street = readString(scanner, "Вулиця: ");
 
-            Employee employee = new Employee(name, position, age, salary, department);
+            Address address = new Address(city, street);
+            Employee employee = new Employee(name, position, age, salary, department, address);
+
             employees.add(employee);
 
             System.out.println("Працівника успішно додано.");
@@ -76,9 +94,26 @@ public class MainClass {
     }
 
     /**
-     * Prints all employees.
+     * Copies last employee in list.
      *
-     * @param employees list of employees
+     * @param employees employee list
+     */
+    public static void copyLastEmployee(ArrayList<Employee> employees) {
+        if (employees.isEmpty()) {
+            System.out.println("Немає об'єкта для копіювання.");
+            return;
+        }
+
+        Employee copy = new Employee(employees.get(employees.size() - 1));
+        employees.add(copy);
+
+        System.out.println("Останній об'єкт скопійовано.");
+    }
+
+    /**
+     * Prints employees.
+     *
+     * @param employees employee list
      */
     public static void printEmployees(ArrayList<Employee> employees) {
         if (employees.isEmpty()) {
@@ -94,12 +129,39 @@ public class MainClass {
     }
 
     /**
-     * Reads non-empty string.
+     * Reads department enum.
      *
      * @param scanner scanner object
-     * @param message input message
-     * @return string value
+     * @return selected department
      */
+    public static Department readDepartment(Scanner scanner) {
+        while (true) {
+            System.out.println("Оберіть відділ:");
+            System.out.println("1. SALES");
+            System.out.println("2. IT");
+            System.out.println("3. HR");
+            System.out.println("4. FINANCE");
+            System.out.println("5. MANAGEMENT");
+
+            int choice = readInt(scanner, "Ваш вибір: ");
+
+            switch (choice) {
+                case 1:
+                    return Department.SALES;
+                case 2:
+                    return Department.IT;
+                case 3:
+                    return Department.HR;
+                case 4:
+                    return Department.FINANCE;
+                case 5:
+                    return Department.MANAGEMENT;
+                default:
+                    System.out.println("Помилка: такого відділу немає.");
+            }
+        }
+    }
+
     public static String readString(Scanner scanner, String message) {
         System.out.print(message);
         String value = scanner.nextLine();
@@ -111,13 +173,6 @@ public class MainClass {
         return value;
     }
 
-    /**
-     * Reads integer value.
-     *
-     * @param scanner scanner object
-     * @param message input message
-     * @return integer value
-     */
     public static int readInt(Scanner scanner, String message) {
         while (true) {
             try {
@@ -132,13 +187,6 @@ public class MainClass {
         }
     }
 
-    /**
-     * Reads double value.
-     *
-     * @param scanner scanner object
-     * @param message input message
-     * @return double value
-     */
     public static double readDouble(Scanner scanner, String message) {
         while (true) {
             try {

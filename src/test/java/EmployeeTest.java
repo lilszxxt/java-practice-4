@@ -8,11 +8,20 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class EmployeeTest {
 
     /**
-     * Checks exception in setter.
+     * Checks exception when invalid salary is set.
      */
     @Test
     public void shouldThrowExceptionWhenInvalidSalaryInSetter() {
-        Employee employee = new Employee("Oleh", "Manager", 30, 30000, "Sales");
+        Address address = new Address("Kyiv", "Shevchenko");
+
+        Employee employee = new Employee(
+                "Oleh",
+                "Manager",
+                30,
+                30000,
+                Department.IT,
+                address
+        );
 
         assertThrows(IllegalArgumentException.class, () -> {
             employee.setSalary(-1000);
@@ -20,12 +29,38 @@ public class EmployeeTest {
     }
 
     /**
-     * Checks exception in constructor.
+     * Checks exception when constructor receives invalid data.
      */
     @Test
     public void shouldThrowExceptionWhenInvalidConstructorData() {
+        Address address = new Address("Kyiv", "Shevchenko");
+
         assertThrows(IllegalArgumentException.class, () -> {
-            new Employee("", "Manager", 15, -500, "");
+            new Employee(
+                    "",
+                    "Manager",
+                    15,
+                    -500,
+                    Department.IT,
+                    address
+            );
+        });
+    }
+
+    /**
+     * Checks exception when invalid address is used.
+     */
+    @Test
+    public void shouldThrowExceptionWhenAddressIsNull() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            new Employee(
+                    "Oleh",
+                    "Manager",
+                    30,
+                    30000,
+                    Department.IT,
+                    null
+            );
         });
     }
 }
