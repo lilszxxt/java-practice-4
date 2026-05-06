@@ -1,3 +1,4 @@
+// Main driver class with ArrayList logic
 import java.util.ArrayList;
 import java.util.Scanner;
 
