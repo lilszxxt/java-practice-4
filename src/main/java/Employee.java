@@ -1,3 +1,4 @@
+// Employee class for practice 4
 public class Employee {
 
     private String name;
