@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Enum that describes employee departments.
  */
 public enum Department {

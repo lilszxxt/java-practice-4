@@ -1,4 +1,4 @@
-﻿import java.util.Objects;
+import java.util.Objects;
 
 /**
  * Class that describes employee address.
