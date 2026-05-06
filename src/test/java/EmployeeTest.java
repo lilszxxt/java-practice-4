@@ -2,64 +2,66 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-/**
- * Tests for Employee class.
- */
 public class EmployeeTest {
 
-    /**
-     * Checks exception when invalid salary is set.
-     */
     @Test
     public void shouldThrowExceptionWhenInvalidSalaryInSetter() {
-        Address address = new Address("Kyiv", "Shevchenko");
 
         Employee employee = new Employee(
                 "Oleh",
                 "Manager",
                 30,
-                30000,
-                Department.IT,
-                address
+                30000
         );
 
         assertThrows(IllegalArgumentException.class, () -> {
+
             employee.setSalary(-1000);
         });
     }
 
-    /**
-     * Checks exception when constructor receives invalid data.
-     */
     @Test
     public void shouldThrowExceptionWhenInvalidConstructorData() {
-        Address address = new Address("Kyiv", "Shevchenko");
 
         assertThrows(IllegalArgumentException.class, () -> {
+
             new Employee(
                     "",
                     "Manager",
                     15,
-                    -500,
-                    Department.IT,
-                    address
+                    -500
             );
         });
     }
 
-    /**
-     * Checks exception when invalid address is used.
-     */
     @Test
-    public void shouldThrowExceptionWhenAddressIsNull() {
+    public void shouldThrowExceptionWhenInvalidContractMonths() {
+
         assertThrows(IllegalArgumentException.class, () -> {
-            new Employee(
+
+            new ContractEmployee(
+                    "Oleh",
+                    "Developer",
+                    30,
+                    30000,
+                    0,
+                    500
+            );
+        });
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenInvalidBonus() {
+
+        assertThrows(IllegalArgumentException.class, () -> {
+
+            new FullTimeEmployee(
                     "Oleh",
                     "Manager",
                     30,
                     30000,
-                    Department.IT,
-                    null
+                    20,
+                    -100
             );
         });
     }

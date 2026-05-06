@@ -8,38 +8,46 @@ import java.util.Scanner;
 public class MainClass {
 
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        ArrayList<Employee> employees = new ArrayList<Employee>();
 
-        printHeader();
+        Scanner scanner = new Scanner(System.in);
+
+        ArrayList<Employee> employees = new ArrayList<Employee>();
 
         boolean running = true;
 
         while (running) {
+
             printMenu();
 
             int choice = readInt(scanner, "Оберіть пункт меню: ");
 
             switch (choice) {
+
                 case 1:
                     createEmployee(scanner, employees);
                     break;
+
                 case 2:
+                    createContractEmployee(scanner, employees);
+                    break;
+
+                case 3:
+                    createFullTimeEmployee(scanner, employees);
+                    break;
+
+                case 4:
                     printEmployees(employees);
                     break;
-                case 3:
-                    copyLastEmployee(employees);
-                    break;
-                case 4:
-                    System.out.println("Кількість створених працівників: "
-                            + Employee.getEmployeeCount());
-                    break;
+
                 case 5:
                     running = false;
                     System.out.println("Роботу завершено.");
                     break;
+
                 default:
-                    System.out.println("Помилка: такого пункту меню немає.");
+                    System.out.println(
+                            "Помилка: такого пункту меню немає."
+                    );
             }
         }
 
@@ -47,155 +55,251 @@ public class MainClass {
     }
 
     /**
-     * Prints information header.
-     */
-    public static void printHeader() {
-        System.out.println("Практична робота №6");
-        System.out.println("Класи, статичні члени, агрегація, enum");
-    }
-
-    /**
      * Prints menu.
      */
     public static void printMenu() {
+
         System.out.println();
-        System.out.println("1. Створити новий об'єкт");
-        System.out.println("2. Вивести інформацію про всі об'єкти");
-        System.out.println("3. Скопіювати останній об'єкт");
-        System.out.println("4. Показати кількість створених об'єктів");
+        System.out.println("1. Створити Employee");
+        System.out.println("2. Створити ContractEmployee");
+        System.out.println("3. Створити FullTimeEmployee");
+        System.out.println("4. Вивести інформацію про всі об'єкти");
         System.out.println("5. Завершити роботу");
     }
 
     /**
-     * Creates employee.
-     *
-     * @param scanner scanner object
-     * @param employees employee list
+     * Creates Employee object.
      */
-    public static void createEmployee(Scanner scanner, ArrayList<Employee> employees) {
+    public static void createEmployee(
+            Scanner scanner,
+            ArrayList<Employee> employees
+    ) {
+
         try {
+
             String name = readString(scanner, "Ім'я: ");
             String position = readString(scanner, "Посада: ");
             int age = readInt(scanner, "Вік: ");
             double salary = readDouble(scanner, "Зарплата: ");
-            Department department = readDepartment(scanner);
-            String city = readString(scanner, "Місто: ");
-            String street = readString(scanner, "Вулиця: ");
 
-            Address address = new Address(city, street);
-            Employee employee = new Employee(name, position, age, salary, department, address);
+            Employee employee = new Employee(
+                    name,
+                    position,
+                    age,
+                    salary
+            );
 
             employees.add(employee);
 
-            System.out.println("Працівника успішно додано.");
+            System.out.println("Employee успішно додано.");
+
         } catch (IllegalArgumentException e) {
-            System.out.println("Помилка введення: " + e.getMessage());
+
+            System.out.println(
+                    "Помилка введення: " + e.getMessage()
+            );
         }
     }
 
     /**
-     * Copies last employee in list.
-     *
-     * @param employees employee list
+     * Creates ContractEmployee object.
      */
-    public static void copyLastEmployee(ArrayList<Employee> employees) {
-        if (employees.isEmpty()) {
-            System.out.println("Немає об'єкта для копіювання.");
-            return;
+    public static void createContractEmployee(
+            Scanner scanner,
+            ArrayList<Employee> employees
+    ) {
+
+        try {
+
+            String name = readString(scanner, "Ім'я: ");
+            String position = readString(scanner, "Посада: ");
+            int age = readInt(scanner, "Вік: ");
+            double salary = readDouble(scanner, "Зарплата: ");
+
+            int contractMonths = readInt(
+                    scanner,
+                    "Тривалість контракту в місяцях: "
+            );
+
+            double hourlyRate = readDouble(
+                    scanner,
+                    "Погодинна ставка: "
+            );
+
+            Employee employee = new ContractEmployee(
+                    name,
+                    position,
+                    age,
+                    salary,
+                    contractMonths,
+                    hourlyRate
+            );
+
+            employees.add(employee);
+
+            System.out.println(
+                    "ContractEmployee успішно додано."
+            );
+
+        } catch (IllegalArgumentException e) {
+
+            System.out.println(
+                    "Помилка введення: " + e.getMessage()
+            );
         }
-
-        Employee copy = new Employee(employees.get(employees.size() - 1));
-        employees.add(copy);
-
-        System.out.println("Останній об'єкт скопійовано.");
     }
 
     /**
-     * Prints employees.
-     *
-     * @param employees employee list
+     * Creates FullTimeEmployee object.
      */
-    public static void printEmployees(ArrayList<Employee> employees) {
+    public static void createFullTimeEmployee(
+            Scanner scanner,
+            ArrayList<Employee> employees
+    ) {
+
+        try {
+
+            String name = readString(scanner, "Ім'я: ");
+            String position = readString(scanner, "Посада: ");
+            int age = readInt(scanner, "Вік: ");
+            double salary = readDouble(scanner, "Зарплата: ");
+
+            int vacationDays = readInt(
+                    scanner,
+                    "Кількість днів відпустки: "
+            );
+
+            double bonus = readDouble(
+                    scanner,
+                    "Бонус: "
+            );
+
+            Employee employee = new FullTimeEmployee(
+                    name,
+                    position,
+                    age,
+                    salary,
+                    vacationDays,
+                    bonus
+            );
+
+            employees.add(employee);
+
+            System.out.println(
+                    "FullTimeEmployee успішно додано."
+            );
+
+        } catch (IllegalArgumentException e) {
+
+            System.out.println(
+                    "Помилка введення: " + e.getMessage()
+            );
+        }
+    }
+
+    /**
+     * Prints all employees.
+     */
+    public static void printEmployees(
+            ArrayList<Employee> employees
+    ) {
+
         if (employees.isEmpty()) {
-            System.out.println("Список працівників порожній.");
+
+            System.out.println(
+                    "Список працівників порожній."
+            );
+
             return;
         }
 
         System.out.println("Список працівників:");
 
         for (Employee employee : employees) {
+
             System.out.println(employee);
         }
     }
 
     /**
-     * Reads department enum.
-     *
-     * @param scanner scanner object
-     * @return selected department
+     * Reads string value.
      */
-    public static Department readDepartment(Scanner scanner) {
-        while (true) {
-            System.out.println("Оберіть відділ:");
-            System.out.println("1. SALES");
-            System.out.println("2. IT");
-            System.out.println("3. HR");
-            System.out.println("4. FINANCE");
-            System.out.println("5. MANAGEMENT");
+    public static String readString(
+            Scanner scanner,
+            String message
+    ) {
 
-            int choice = readInt(scanner, "Ваш вибір: ");
-
-            switch (choice) {
-                case 1:
-                    return Department.SALES;
-                case 2:
-                    return Department.IT;
-                case 3:
-                    return Department.HR;
-                case 4:
-                    return Department.FINANCE;
-                case 5:
-                    return Department.MANAGEMENT;
-                default:
-                    System.out.println("Помилка: такого відділу немає.");
-            }
-        }
-    }
-
-    public static String readString(Scanner scanner, String message) {
         System.out.print(message);
+
         String value = scanner.nextLine();
 
         if (value.trim().isEmpty()) {
-            throw new IllegalArgumentException("Рядок не може бути порожнім.");
+
+            throw new IllegalArgumentException(
+                    "Рядок не може бути порожнім."
+            );
         }
 
         return value;
     }
 
-    public static int readInt(Scanner scanner, String message) {
+    /**
+     * Reads integer value.
+     */
+    public static int readInt(
+            Scanner scanner,
+            String message
+    ) {
+
         while (true) {
+
             try {
+
                 System.out.print(message);
+
                 int value = scanner.nextInt();
+
                 scanner.nextLine();
+
                 return value;
+
             } catch (InputMismatchException e) {
-                System.out.println("Помилка: потрібно ввести ціле число.");
+
+                System.out.println(
+                        "Помилка: потрібно ввести ціле число."
+                );
+
                 scanner.nextLine();
             }
         }
     }
 
-    public static double readDouble(Scanner scanner, String message) {
+    /**
+     * Reads double value.
+     */
+    public static double readDouble(
+            Scanner scanner,
+            String message
+    ) {
+
         while (true) {
+
             try {
+
                 System.out.print(message);
+
                 double value = scanner.nextDouble();
+
                 scanner.nextLine();
+
                 return value;
+
             } catch (InputMismatchException e) {
-                System.out.println("Помилка: потрібно ввести число.");
+
+                System.out.println(
+                        "Помилка: потрібно ввести число."
+                );
+
                 scanner.nextLine();
             }
         }
