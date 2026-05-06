@@ -1,4 +1,5 @@
 // Employee class for practice 4
+// Employee class with equals method
 public class Employee {
 
     private String name;

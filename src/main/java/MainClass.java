@@ -1,5 +1,4 @@
 // Main driver class with ArrayList logic
-// equals method implemented
 import java.util.ArrayList;
 import java.util.Scanner;
 
