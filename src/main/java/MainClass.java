@@ -1,12 +1,17 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class MainClass {
 
+    private static final String FILE_NAME = "input.txt";
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        ArrayList<Employee> employees = new ArrayList<Employee>();
+        ArrayList<Employee> employees = loadEmployeesFromFile(FILE_NAME);
 
         boolean running = true;
 
@@ -23,8 +28,9 @@ public class MainClass {
                     printEmployees(employees);
                     break;
                 case 3:
+                    saveEmployeesToFile(employees, FILE_NAME);
                     running = false;
-                    System.out.println("Роботу завершено.");
+                    System.out.println("Дані збережено. Роботу завершено.");
                     break;
                 default:
                     System.out.println("Помилка: такого пункту меню немає.");
@@ -224,6 +230,181 @@ public class MainClass {
         for (Employee employee : employees) {
             System.out.println(employee);
         }
+    }
+
+    public static ArrayList<Employee> loadEmployeesFromFile(String fileName) {
+        ArrayList<Employee> employees = new ArrayList<Employee>();
+        File file = new File(fileName);
+
+        if (!file.exists()) {
+            System.out.println("Файл " + fileName + " не знайдено. Створено порожній список.");
+            return employees;
+        }
+
+        try {
+            Scanner fileScanner = new Scanner(file);
+
+            while (fileScanner.hasNextLine()) {
+                String line = fileScanner.nextLine();
+
+                if (!line.trim().isEmpty()) {
+                    Employee employee = parseEmployee(line);
+
+                    if (employee != null) {
+                        employees.add(employee);
+                    }
+                }
+            }
+
+            fileScanner.close();
+
+            System.out.println("Дані з файлу завантажено.");
+        } catch (FileNotFoundException e) {
+            System.out.println("Помилка читання файлу: " + e.getMessage());
+        }
+
+        return employees;
+    }
+
+    public static Employee parseEmployee(String line) {
+        try {
+            String[] parts = line.split(";");
+
+            String type = parts[0];
+
+            if ("EMPLOYEE".equals(type)) {
+                return new Employee(
+                        parts[1],
+                        parts[2],
+                        Integer.parseInt(parts[3]),
+                        Double.parseDouble(parts[4])
+                );
+            }
+
+            if ("CONTRACT".equals(type)) {
+                return new ContractEmployee(
+                        parts[1],
+                        parts[2],
+                        Integer.parseInt(parts[3]),
+                        Double.parseDouble(parts[4]),
+                        Integer.parseInt(parts[5]),
+                        Double.parseDouble(parts[6])
+                );
+            }
+
+            if ("FULLTIME".equals(type)) {
+                return new FullTimeEmployee(
+                        parts[1],
+                        parts[2],
+                        Integer.parseInt(parts[3]),
+                        Double.parseDouble(parts[4]),
+                        Integer.parseInt(parts[5]),
+                        Double.parseDouble(parts[6])
+                );
+            }
+
+            if ("MANAGER".equals(type)) {
+                return new Manager(
+                        parts[1],
+                        parts[2],
+                        Integer.parseInt(parts[3]),
+                        Double.parseDouble(parts[4]),
+                        Integer.parseInt(parts[5]),
+                        Double.parseDouble(parts[6]),
+                        Integer.parseInt(parts[7]),
+                        Double.parseDouble(parts[8])
+                );
+            }
+
+            if ("INTERN".equals(type)) {
+                return new InternEmployee(
+                        parts[1],
+                        parts[2],
+                        Integer.parseInt(parts[3]),
+                        Double.parseDouble(parts[4]),
+                        parts[5],
+                        Integer.parseInt(parts[6])
+                );
+            }
+
+            System.out.println("Невідомий тип об'єкта у файлі: " + type);
+        } catch (Exception e) {
+            System.out.println("Некоректний рядок у файлі: " + line);
+        }
+
+        return null;
+    }
+
+    public static void saveEmployeesToFile(ArrayList<Employee> employees, String fileName) {
+        try {
+            PrintWriter writer = new PrintWriter(fileName);
+
+            for (Employee employee : employees) {
+                writer.println(formatEmployee(employee));
+            }
+
+            writer.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("Помилка запису у файл: " + e.getMessage());
+        }
+    }
+
+    public static String formatEmployee(Employee employee) {
+        if (employee instanceof Manager) {
+            Manager manager = (Manager) employee;
+
+            return "MANAGER;"
+                    + manager.getName() + ";"
+                    + manager.getPosition() + ";"
+                    + manager.getAge() + ";"
+                    + manager.getSalary() + ";"
+                    + manager.getVacationDays() + ";"
+                    + manager.getBonus() + ";"
+                    + manager.getTeamSize() + ";"
+                    + manager.getManagementBonus();
+        }
+
+        if (employee instanceof InternEmployee) {
+            InternEmployee internEmployee = (InternEmployee) employee;
+
+            return "INTERN;"
+                    + internEmployee.getName() + ";"
+                    + internEmployee.getPosition() + ";"
+                    + internEmployee.getAge() + ";"
+                    + internEmployee.getSalary() + ";"
+                    + internEmployee.getUniversity() + ";"
+                    + internEmployee.getInternshipMonths();
+        }
+
+        if (employee instanceof ContractEmployee) {
+            ContractEmployee contractEmployee = (ContractEmployee) employee;
+
+            return "CONTRACT;"
+                    + contractEmployee.getName() + ";"
+                    + contractEmployee.getPosition() + ";"
+                    + contractEmployee.getAge() + ";"
+                    + contractEmployee.getSalary() + ";"
+                    + contractEmployee.getContractMonths() + ";"
+                    + contractEmployee.getHourlyRate();
+        }
+
+        if (employee instanceof FullTimeEmployee) {
+            FullTimeEmployee fullTimeEmployee = (FullTimeEmployee) employee;
+
+            return "FULLTIME;"
+                    + fullTimeEmployee.getName() + ";"
+                    + fullTimeEmployee.getPosition() + ";"
+                    + fullTimeEmployee.getAge() + ";"
+                    + fullTimeEmployee.getSalary() + ";"
+                    + fullTimeEmployee.getVacationDays() + ";"
+                    + fullTimeEmployee.getBonus();
+        }
+
+        return "EMPLOYEE;"
+                + employee.getName() + ";"
+                + employee.getPosition() + ";"
+                + employee.getAge() + ";"
+                + employee.getSalary();
     }
 
     public static String readString(Scanner scanner, String message) {
